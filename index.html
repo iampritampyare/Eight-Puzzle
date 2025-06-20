@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>8 Puzzle Game Solver</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
       display: flex;
+      flex-direction: row;
       height: 100vh;
     }
     iframe {
@@ -21,6 +23,7 @@
       width: 50%;
       padding: 2rem;
       overflow-y: auto;
+      background: white;
     }
     h1 {
       font-size: 1.5rem;
@@ -52,6 +55,32 @@
       border-radius: 8px;
       margin-top: 1rem;
     }
+    .info-button {
+      margin-top: 1rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: blue;
+      text-decoration: underline;
+      font-size: 0.9rem;
+    }
+    .complexity-info {
+      display: none;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      background: #f9f9f9;
+      padding: 1rem;
+      border-left: 4px solid #888;
+    }
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      iframe, .right {
+        width: 100%;
+        height: 50vh;
+      }
+    }
   </style>
 </head>
 <body>
@@ -66,6 +95,34 @@
     <button class="btn" onclick="resetInputs()">Reset</button>
 
     <div class="output" id="output"></div>
+    <button class="info-button" onclick="toggleComplexity()">View Time Complexity 📈</button>
+    <div class="complexity-info" id="complexity">
+      🔍 <strong>Time Complexity of A* for 8-Puzzle</strong>
+      <br/><br/>
+      🔢 State Space<br/>
+      The total number of distinct board states in 8-puzzle is 9! = 362,880<br/>
+      But only half of them are solvable:<br/>
+      <strong>Solvable states = 181,440</strong><br/><br/>
+      ⏱ <strong>Worst-Case Time Complexity</strong><br/>
+      A* may explore most or all of the 181,440 states.<br/><br/>
+      So time complexity is:<br/>
+      <strong>O(b^d)</strong> where:<br/>
+      b = branching factor (~2.13), d = depth of optimal solution (10–30)<br/><br/>
+      Worst case (with poor heuristic):<br/>
+      <strong>O(N) = O(181,440)</strong><br/><br/>
+      ⚙️ <strong>In Your Code</strong><br/>
+      You use a priority queue (heap) to expand lowest cost+heuristic.
+      Still, in worst case, A* can behave like exhaustive search.<br/><br/>
+      📌 <strong>Space Complexity</strong><br/>
+      A* stores visited states and frontier:
+      <strong>O(N) = O(181,440)</strong><br/><br/>
+      🧠 <strong>Summary</strong><br/>
+      <table>
+        <tr><td>Time</td><td>O(b^d) ≈ O(181,440)</td></tr>
+        <tr><td>Space</td><td>O(N) ≈ O(181,440)</td></tr>
+        <tr><td>Best case</td><td>Much faster (good heuristic)</td></tr>
+      </table>
+    </div>
   </div>
 
   <script type="module">
@@ -196,6 +253,11 @@
       }
       output.innerText = `✅ Total steps: ${result.length}\n\n` + result.map((s, i) => `Step ${i + 1}: ${s[0]} - ${s[1]}`).join("\n");
     };
+
+    window.toggleComplexity = () => {
+      const info = document.getElementById("complexity");
+      info.style.display = info.style.display === "none" ? "block" : "none";
+    }
   </script>
 </body>
 </html>
